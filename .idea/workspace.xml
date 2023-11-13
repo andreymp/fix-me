@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b272db7d-a7c1-449f-98cb-8e8e5bdd8c2e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/1/6/164f54b636598ed9e43551f09ed6c99db33f749f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/1/2130062f469530df5c983ea5b9c1e476c932724f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/2/d/2db1404ca80b1e1cece35ad76ebc6430d98b95db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/3/33457af630b8fffd2b65c8fdf53b8e7e47dcfe8b" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/6/3698d4f6b4462e6eb02119b8ca7e08dbe896118d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/9/39779e668eea3e0c2d317450d45e549eadc4fb96" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/1/41cfc449e30df7ec01bbb72ec0550c026be2b4e9" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/4/8/488bdbea7e8b73c44bd2a54e63f6012f10969196" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/5/6551c8f8b9c3cd1b60139e169a6a6cc9d89247be" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/a/8a2cc47f9141daf676ea5cfa5ddc8318ca2ede03" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/4/948da734f5aa4b88de5b85df41ca23d4d8bc42f3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/b/9b5a00e1e63c399fd6b7da155bf30aaeadb6c6df" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/a/5/a5cc2925ca8258af241be7e5b0381edf30266302" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/0/b02ca6ca3a17ae9fe07078b48ce4e89074a69ad5" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/2/b255cc1ca9bb347b0daf71f49046bbc0e943357e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/5/b5070811c361c4646854cb62d191ca99ee9398a3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/f/bf3e8c57816c43c75ee7ed742a70dafa50e57a66" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/c/7/c73052926a8df801ec4b745b4ff11ba76fe5dc96" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/d/9/d98281b6b28e98475b885b6faa8ce2f867e68e2a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/e/3/e30b71f7a4d5d96992c326e2ec227f9d0916bf12" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/e/d/edf7c0681068146b590a473686aff636b71bdac0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/5/f58b1be5a22f5f7352922a1c4b53166345897c4d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/6/f604965c8550972d1f01d87bc177c39fdf043b9d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/f/d/fd8805e607631be687a547a8a3d0ef5f30062f8f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/1/6/164f54b636598ed9e43551f09ed6c99db33f749f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/2/1/2130062f469530df5c983ea5b9c1e476c932724f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/2/d/2db1404ca80b1e1cece35ad76ebc6430d98b95db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/3/3/33457af630b8fffd2b65c8fdf53b8e7e47dcfe8b" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/3/6/3698d4f6b4462e6eb02119b8ca7e08dbe896118d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/3/9/39779e668eea3e0c2d317450d45e549eadc4fb96" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/4/1/41cfc449e30df7ec01bbb72ec0550c026be2b4e9" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/4/8/488bdbea7e8b73c44bd2a54e63f6012f10969196" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/6/5/6551c8f8b9c3cd1b60139e169a6a6cc9d89247be" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/8/a/8a2cc47f9141daf676ea5cfa5ddc8318ca2ede03" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/9/4/948da734f5aa4b88de5b85df41ca23d4d8bc42f3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/9/b/9b5a00e1e63c399fd6b7da155bf30aaeadb6c6df" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/a/5/a5cc2925ca8258af241be7e5b0381edf30266302" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/b/0/b02ca6ca3a17ae9fe07078b48ce4e89074a69ad5" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/b/2/b255cc1ca9bb347b0daf71f49046bbc0e943357e" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/b/5/b5070811c361c4646854cb62d191ca99ee9398a3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/b/f/bf3e8c57816c43c75ee7ed742a70dafa50e57a66" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/c/7/c73052926a8df801ec4b745b4ff11ba76fe5dc96" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/d/9/d98281b6b28e98475b885b6faa8ce2f867e68e2a" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/e/3/e30b71f7a4d5d96992c326e2ec227f9d0916bf12" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/e/d/edf7c0681068146b590a473686aff636b71bdac0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/f/5/f58b1be5a22f5f7352922a1c4b53166345897c4d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/f/6/f604965c8550972d1f01d87bc177c39fdf043b9d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/f/d/fd8805e607631be687a547a8a3d0ef5f30062f8f" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/broker/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/broker/src/main/java/edu/school42/fixme/broker/Broker.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/broker/src/main/java/edu/school42/fixme/broker/exception/BrokerException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/broker/src/main/java/edu/school42/fixme/broker/model/MarketSimulationProperties.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/broker/src/main/java/edu/school42/fixme/broker/processor/InComingMessagesProcessor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/broker/src/main/java/edu/school42/fixme/broker/repository/FixMessagesRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/broker/src/main/java/edu/school42/fixme/broker/service/FixMessagesService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/broker/src/main/java/edu/school42/fixme/broker/simulation/BrokerSimulation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/broker/src/main/java/edu/school42/fixme/broker/socket/BrokerSocket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/broker/src/main/java/edu/school42/fixme/broker/validator/BrokerFixValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/broker/src/main/resources/META-INF/persistence.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/edu/school42/fixme/common/converter/FixMessageMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/edu/school42/fixme/common/creator/MessageCreator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/edu/school42/fixme/common/dto/FixMessageDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/edu/school42/fixme/common/dto/MessageType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/edu/school42/fixme/common/exception/FixMessageValidationException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/edu/school42/fixme/common/model/FixMessageEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/edu/school42/fixme/common/model/Source.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/edu/school42/fixme/common/model/Status.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/edu/school42/fixme/common/options/BrokerOptions.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/edu/school42/fixme/common/options/MarketOptions.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/edu/school42/fixme/common/util/FixMessageUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/edu/school42/fixme/common/validation/FixMessageValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/market/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/market/src/main/java/edu/school42/fixme/market/Market.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/market/src/main/java/edu/school42/fixme/market/exception/MarketException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/market/src/main/java/edu/school42/fixme/market/repository/FixMessagesRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/market/src/main/java/edu/school42/fixme/market/service/FixMessagesService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/market/src/main/java/edu/school42/fixme/market/simulation/MarketSimulation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/market/src/main/java/edu/school42/fixme/market/socket/MarketSocket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/market/src/main/java/edu/school42/fixme/market/validator/MarketFixValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/java/edu/school42/fixme/router/Router.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/java/edu/school42/fixme/router/exception/RouterException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/java/edu/school42/fixme/router/proccessor/MessageProcessor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/java/edu/school42/fixme/router/repository/FixMessagesRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/java/edu/school42/fixme/router/service/FixMessagesService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/java/edu/school42/fixme/router/socket/RouterSocket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/java/edu/school42/fixme/router/source/ASource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/java/edu/school42/fixme/router/source/BrokerSource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/java/edu/school42/fixme/router/source/MarketSource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/java/edu/school42/fixme/router/table/RoutingTable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/resources/META-INF/persistence.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/resources/db/initialization/initialization.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/resources/db/initialization/schema/init-schema.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/resources/db/initialization/schema/log/00_fix_me.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/resources/db/initialization/schema/log/01_fix_messages.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/router/src/main/resources/db/liquibase_master.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="package-info" />
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="workspaceImportEnabled" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2UFNlfqFB8A2sigwrPi2F4lqEDc" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;corretto-17&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;55f2f42c76cd92b02a7f117a2d3d0ede&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
+    ]
+  }
+}</component>
+  <component name="RunManager" selected="Maven.router [liquibase:update]">
+    <configuration name="fix-me [clean,install]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="clean" />
+                <option value="install" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <configuration name="router [liquibase:update]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="liquibase:update" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$/../fix-me\router" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Maven.router [liquibase:update]" />
+      <item itemvalue="Maven.fix-me [clean,install]" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b272db7d-a7c1-449f-98cb-8e8e5bdd8c2e" name="Changes" comment="" />
+      <created>1692531520990</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1692531520990</updated>
+      <workItem from="1692531522256" duration="3273000" />
+      <workItem from="1692881654316" duration="5508000" />
+      <workItem from="1695474173807" duration="3858000" />
+      <workItem from="1695738286316" duration="1230000" />
+      <workItem from="1695814203889" duration="10563000" />
+      <workItem from="1697627710012" duration="2939000" />
+      <workItem from="1698053266434" duration="7000" />
+      <workItem from="1698162307723" duration="17087000" />
+      <workItem from="1698240819272" duration="19408000" />
+      <workItem from="1698400715349" duration="15316000" />
+      <workItem from="1699191766749" duration="29000" />
+      <workItem from="1699257971332" duration="8828000" />
+      <workItem from="1699367263122" duration="3780000" />
+      <workItem from="1699436806277" duration="5000" />
+      <workItem from="1699538816350" duration="6466000" />
+      <workItem from="1699628840467" duration="10360000" />
+      <workItem from="1699874896683" duration="2391000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

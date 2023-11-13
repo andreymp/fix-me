@@ -1,0 +1,19 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="init_schema.fix_messages" author="jobject">
+        <sql>
+            <![CDATA[
+                CREATE TABLE IF NOT EXISTS fix_me.fix_messages (
+                    id        SERIAL PRIMARY KEY,
+                    body      TEXT NOT NULL,
+                    source    TEXT NOT NULL,
+                    status    TEXT NOT NULL
+                );
+
+                CREATE INDEX IF NOT EXISTS idx_source_status ON fix_me.fix_messages (source, status);
+            ]]>
+        </sql>
+    </changeSet>
+</databaseChangeLog>
