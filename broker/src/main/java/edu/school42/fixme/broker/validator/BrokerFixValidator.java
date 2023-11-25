@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class BrokerFixValidator extends FixMessageValidator {
@@ -34,9 +35,10 @@ public class BrokerFixValidator extends FixMessageValidator {
 		});
 
 		FixMessageDto dto = new FixMessageDto();
+		dto.setId(ThreadLocalRandom.current().nextInt(0, Integer.MAX_VALUE));
 		dto.setOrderId(UUID.randomUUID().toString());
 		dto.setType(MessageType.PLACE_ORDER);
-		dto.setTargetId((Long) fixMessageAsMap.get(FixMessageUtil.MARKET));
+		dto.setTargetId(Long.parseLong((String) fixMessageAsMap.get(FixMessageUtil.MARKET)));
 		dto.setSendersId(Broker.ID);
 		try {
 			dto.setSide(BrokerOptions.valueOf((String) fixMessageAsMap.get(FixMessageUtil.SIDE)));
@@ -44,10 +46,11 @@ public class BrokerFixValidator extends FixMessageValidator {
 			throw new FixMessageValidationException(ERROR_MESSAGE);
 		}
 		dto.setInstrument((String) fixMessageAsMap.get(FixMessageUtil.INSTRUMENT));
-		dto.setQuantity((Integer) fixMessageAsMap.get(FixMessageUtil.QUANTITY));
+		dto.setQuantity(Integer.parseInt((String) fixMessageAsMap.get(FixMessageUtil.QUANTITY)));
 		dto.setMarket(dto.getTargetId());
-		dto.setPrice((Double) fixMessageAsMap.get(FixMessageUtil.PRICE));
+		dto.setPrice(Double.parseDouble((String) fixMessageAsMap.get(FixMessageUtil.PRICE)));
 		dto.countBodyLength();
+		dto.countChecksum();
 		return dto;
 	}
 

@@ -3,8 +3,11 @@ package edu.school42.fixme.market.simulation;
 import edu.school42.fixme.common.converter.FixMessageMapper;
 import edu.school42.fixme.common.dto.FixMessageDto;
 import edu.school42.fixme.common.model.FixMessageEntity;
+import edu.school42.fixme.common.model.Source;
 import edu.school42.fixme.common.model.Status;
 import edu.school42.fixme.market.exception.MarketException;
+import edu.school42.fixme.market.handler.impl.SellMessageHandler;
+import edu.school42.fixme.market.handler.impl.BuyMessageHandler;
 import edu.school42.fixme.market.service.FixMessagesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,10 +39,18 @@ public class MarketSimulation {
 				updateStatus(line, Status.COMPLETED);
 
 				FixMessageDto dto = mapper.toDto(line);
-				switch (dto.getSide()) {
-					case BUY -> ;
-					case SELL -> ;
-				}
+				String incomingMessage = switch (dto.getSide()) {
+					case BUY -> new BuyMessageHandler(mapper).handle(dto);
+					case SELL -> new SellMessageHandler(mapper).handle(dto);
+				};
+				FixMessageEntity entity = new FixMessageEntity();
+				entity.setBody(incomingMessage);
+				entity.setSource(Source.MARKET);
+				entity.setStatus(Status.CREATED);
+				fixMessagesService.insert(entity);
+
+				pw.println(incomingMessage);
+				updateStatus(incomingMessage, Status.SENT_TO_ROUTER);
 			}
 		} catch (Exception e) {
 			throw new MarketException(e.getMessage());
@@ -51,6 +62,4 @@ public class MarketSimulation {
 		entity.setStatus(status);
 		fixMessagesService.update(entity);
 	}
-
-	private
 }

@@ -52,7 +52,7 @@ public class FixMessageMapper {
 				dto.setOrderId(splitSection[1]);
 			}
 			if (Integer.parseInt(splitSection[0]) == FixMessageUtil.TYPE) {
-				dto.setType(MessageType.valueOf(splitSection[1]));
+				dto.setType(MessageType.decode(splitSection[1].charAt(0)));
 			}
 			if (Integer.parseInt(splitSection[0]) == FixMessageUtil.SENDERS_ID) {
 				dto.setSendersId(Long.parseLong(splitSection[1]));

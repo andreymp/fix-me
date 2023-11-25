@@ -10,6 +10,7 @@ import edu.school42.fixme.router.service.FixMessagesService;
 import edu.school42.fixme.router.source.ASource;
 import edu.school42.fixme.router.table.RoutingTable;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,12 +19,14 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Objects;
 
+@Slf4j
 @RequiredArgsConstructor
 public class MessageProcessor implements Runnable {
 
 	private static final int ROUTER_ID = 0;
 
 	private final ASource source;
+	private final Socket socket;
 	private final RoutingTable routingTable;
 	private final FixMessageMapper mapper;
 	private final MessageCreator messageCreator;
@@ -32,12 +35,15 @@ public class MessageProcessor implements Runnable {
 	@Override
 	public void run() {
 		try (
-			PrintWriter pw = new PrintWriter(source.getSocket().getOutputStream(), true);
-			BufferedReader br = new BufferedReader(new InputStreamReader(source.getSocket().getInputStream()))
+			PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
+			BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()))
 		) {
 			while (true) {
 				String line = br.readLine();
+				log.info("received message :: {}", line);
 				if (Objects.isNull(line)) {
+					continue;
+				} else if ("bye".equals(line)) {
 					break ;
 				}
 				updateStatus(line, Status.RECEIVED_BY_ROUTER);

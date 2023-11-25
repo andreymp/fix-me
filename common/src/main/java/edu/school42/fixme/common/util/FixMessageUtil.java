@@ -1,9 +1,10 @@
 package edu.school42.fixme.common.util;
 
+import edu.school42.fixme.common.model.Source;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 @UtilityClass
@@ -32,5 +33,11 @@ public class FixMessageUtil {
 				.concat("=")
 				.concat(String.valueOf(value))
 				.concat("|");
+	}
+
+	public String trim(String message, List<Integer> tags) {
+		return Arrays.stream(message.split("\\|"))
+				.filter(section -> tags.contains(Integer.parseInt(section.split("=")[0])))
+				.reduce("", (sub, elem) -> sub.concat(elem).concat("|"));
 	}
 }

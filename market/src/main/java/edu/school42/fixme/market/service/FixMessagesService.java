@@ -9,6 +9,10 @@ public class FixMessagesService {
 
 	private final FixMessagesRepository fixMessagesRepository;
 
+	public void insert(FixMessageEntity entity) {
+		fixMessagesRepository.insert(entity);
+	}
+
 	public void update(FixMessageEntity entity) {
 		fixMessagesRepository.update(entity);
 	}

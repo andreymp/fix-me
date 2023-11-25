@@ -34,7 +34,7 @@ public class BrokerSimulation {
 	public void start() {
 		log.info("""
 				Broker ready to read fix-messages
-				
+
 				FIX: tag=value|
 				TAGS:
 						1. 54 -> side: BUY or SELL
@@ -44,26 +44,39 @@ public class BrokerSimulation {
 						5. 44 -> price
 				""");
 
-		Scanner sc = new Scanner(System.in);
-		while (sc.hasNext()) {
-			String message = sc.nextLine();
-			try (PrintWriter pw = new PrintWriter(socket.getOutputStream(), true)) {
+		try {
+			executor.execute(new InComingMessagesProcessor(socket.getInputStream(), fixMessagesService));
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+			throw new BrokerException(e.getMessage());
+		}
+		try (PrintWriter pw = new PrintWriter(socket.getOutputStream(), true)) {
+			Scanner sc = new Scanner(System.in);
+			while (sc.hasNext()) {
+				String message = sc.nextLine();
 				FixMessageEntity entity = createMessageEntity(message);
 				FixMessageDto dto = validator.validate(message);
-				updateStatus(entity, Status.VALIDATED);
+				String incomingMessage = mapper.toFixString(dto);
 
-				pw.println(mapper.toFixString(dto));
+				updateStatus(entity, Status.VALIDATED, incomingMessage);
+				pw.println(incomingMessage);
+				log.info("sent message :: {}", incomingMessage);
 				updateStatus(entity, Status.SENT_TO_ROUTER);
-
-				executor.execute(new InComingMessagesProcessor(socket, fixMessagesService));
-			}  catch (FixMessageValidationException e) {
-				log.error(e.getMessage());
-			} catch (IOException e) {
-				fixMessagesService.close();
-				throw new BrokerException(e.getMessage());
 			}
+		}  catch (FixMessageValidationException e) {
+			log.error(e.getMessage(), e);
+		} catch (IOException e) {
+			fixMessagesService.close();
+			log.error(e.getMessage(), e);
+			throw new BrokerException(e.getMessage());
 		}
 		fixMessagesService.close();
+	}
+
+	private void updateStatus(FixMessageEntity entity, Status status, String message) {
+		entity.setStatus(status);
+		entity.setBody(message);
+		fixMessagesService.update(entity);
 	}
 
 	private void updateStatus(FixMessageEntity entity, Status status) {

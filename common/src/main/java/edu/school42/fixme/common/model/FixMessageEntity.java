@@ -1,15 +1,16 @@
 package edu.school42.fixme.common.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
 import lombok.Data;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 @Data
 @Entity
@@ -18,7 +19,7 @@ public class FixMessageEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fix_messages_id_generator")
-	@SequenceGenerator(name = "fix_messages_id_generator", sequenceName = "fix_messages_id_seq", allocationSize = 1)
+	@SequenceGenerator(name = "fix_messages_id_generator", sequenceName = "fix_me.fix_messages_id_seq", allocationSize = 1)
 	private Long id;
 
 	@Column(name = "body", nullable = false)

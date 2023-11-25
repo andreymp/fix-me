@@ -1,10 +1,11 @@
 package edu.school42.fixme.market.repository;
 
 import edu.school42.fixme.common.model.FixMessageEntity;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.transaction.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.transaction.Transactional;
 
 public class FixMessagesRepository {
 
@@ -12,8 +13,13 @@ public class FixMessagesRepository {
 	private final EntityManager entityManager;
 
 	public FixMessagesRepository() {
-		this.factory = Persistence.createEntityManagerFactory("fixMe");
+		this.factory = Persistence.createEntityManagerFactory("fixMeMarket");
 		this.entityManager = factory.createEntityManager();
+	}
+
+	@Transactional
+	public void insert(FixMessageEntity entity) {
+		entityManager.persist(entity);
 	}
 
 	@Transactional

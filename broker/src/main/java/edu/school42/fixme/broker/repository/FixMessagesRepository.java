@@ -1,10 +1,10 @@
 package edu.school42.fixme.broker.repository;
 
 import edu.school42.fixme.common.model.FixMessageEntity;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.transaction.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 public class FixMessagesRepository {
 
@@ -12,21 +12,22 @@ public class FixMessagesRepository {
 	private final EntityManager entityManager;
 
 	public FixMessagesRepository() {
-		this.factory = Persistence.createEntityManagerFactory("fixMe");
+		this.factory = Persistence.createEntityManagerFactory("fixMeBroker");
 		this.entityManager = factory.createEntityManager();
 	}
 
-	@Transactional
 	public void insert(FixMessageEntity entity) {
+		entityManager.getTransaction().begin();
 		entityManager.persist(entity);
+		entityManager.getTransaction().commit();
 	}
 
-	@Transactional
 	public void update(FixMessageEntity entity) {
+		entityManager.getTransaction().begin();
 		entityManager.merge(entity);
+		entityManager.getTransaction().commit();
 	}
 
-	@Transactional
 	public Long findId(FixMessageEntity entity) {
 		String query = String.format("""
     			SELECT f.id
@@ -34,19 +35,24 @@ public class FixMessagesRepository {
        			WHERE f.source = '%s' AND f.status = '%s'
        			AND f.body = '%s'
 				""", entity.getSource(), entity.getStatus(), entity.getBody());
-		return (Long) entityManager.createQuery(query)
+		entityManager.getTransaction().begin();
+		Long id = (Long) entityManager.createQuery(query)
 				.getSingleResult();
+		entityManager.getTransaction().commit();
+		return id;
 	}
 
-	@Transactional
 	public FixMessageEntity findByBody(String body) {
 		String query = String.format("""
 				SELECT f
 				FROM FixMessageEntity f
 				WHERE f.body = '%s'
 				""", body);
-		return (FixMessageEntity) entityManager.createQuery(query)
+		entityManager.getTransaction().begin();
+		FixMessageEntity entity = (FixMessageEntity) entityManager.createQuery(query)
 				.getSingleResult();
+		entityManager.getTransaction().commit();
+		return entity;
 	}
 
 	public void	close() {

@@ -8,5 +8,16 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/fix_me</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="fixMeRouter/Hibernate" uuid="bcc0fea0-5cc4-44c9-b0e0-1fa8e44910db">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>Hibernate
+
+C:/Users/anmarkin/IdeaProjects/fix-me/router/src/main/resources/META-INF/persistence.xml</remarks>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/fix_me</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

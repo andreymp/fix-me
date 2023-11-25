@@ -45,7 +45,8 @@ public abstract class FixMessageValidator {
 
 	private long countTags(String message, List<Integer> tags) {
 		return tags.stream()
-				.filter(tag -> message.contains(concat(tag)))
+				.filter(tag -> message.contains(SEPARATOR_SECTION.concat(String.valueOf(tag)).concat(SEPARATOR_KV))
+						|| message.contains(String.valueOf(tag).concat(SEPARATOR_KV)))
 				.count();
 	}
 
@@ -56,11 +57,5 @@ public abstract class FixMessageValidator {
 			}
 			return sub;
 		});
-	}
-
-	private String concat(int tag) {
-		return SEPARATOR_SECTION
-				.concat(String.valueOf(tag))
-				.concat(SEPARATOR_KV);
 	}
 }
