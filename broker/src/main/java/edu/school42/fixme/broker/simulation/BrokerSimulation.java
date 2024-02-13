@@ -13,12 +13,13 @@ import edu.school42.fixme.common.validation.FixMessageValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Objects;
 import java.util.Scanner;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,8 +29,7 @@ public class BrokerSimulation {
 	private final FixMessageValidator validator;
 	private final FixMessageMapper mapper;
 	private final FixMessagesService fixMessagesService;
-
-	private final Executor executor = Executors.newSingleThreadExecutor();
+	private final InComingMessagesProcessor inComingMessagesProcessor;
 
 	public void start() {
 		log.info("""
@@ -43,44 +43,55 @@ public class BrokerSimulation {
 						4. 262 -> market destination ID
 						5. 44 -> price
 				""");
-
-		try {
-			executor.execute(new InComingMessagesProcessor(socket.getInputStream(), fixMessagesService));
-		} catch (IOException e) {
-			log.error(e.getMessage(), e);
-			throw new BrokerException(e.getMessage());
-		}
-		try (PrintWriter pw = new PrintWriter(socket.getOutputStream(), true)) {
+		try (
+				PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
+				BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()))
+		) {
+			log.info("received :: {}", br.readLine());
 			Scanner sc = new Scanner(System.in);
 			while (sc.hasNext()) {
 				String message = sc.nextLine();
 				FixMessageEntity entity = createMessageEntity(message);
-				FixMessageDto dto = validator.validate(message);
-				String incomingMessage = mapper.toFixString(dto);
+				String incomingMessage = mapper.toFixString(validator.validate(message));
 
-				updateStatus(entity, Status.VALIDATED, incomingMessage);
+				updateStatus(entity, incomingMessage);
 				pw.println(incomingMessage);
-				log.info("sent message :: {}", incomingMessage);
-				updateStatus(entity, Status.SENT_TO_ROUTER);
+				log.info("sent :: {}", incomingMessage);
+				updateStatus(entity);
+				handleResponse(br);
 			}
-		}  catch (FixMessageValidationException e) {
+		} catch (FixMessageValidationException e) {
 			log.error(e.getMessage(), e);
 		} catch (IOException e) {
 			fixMessagesService.close();
 			log.error(e.getMessage(), e);
 			throw new BrokerException(e.getMessage());
+		} finally {
+			fixMessagesService.close();
 		}
-		fixMessagesService.close();
 	}
 
-	private void updateStatus(FixMessageEntity entity, Status status, String message) {
-		entity.setStatus(status);
+	private void handleResponse(BufferedReader br) throws IOException {
+		String message = br.readLine();
+		if (Objects.nonNull(message)) {
+			log.info("received :: {}", message);
+
+			if (!message.contains("35=C|") && !message.contains("35=V|")) {
+				FixMessageEntity entity = fixMessagesService.findByBody(message);
+				entity.setStatus(Status.COMPLETED);
+				fixMessagesService.update(entity);
+			};
+		}
+	}
+
+	private void updateStatus(FixMessageEntity entity, String message) {
+		entity.setStatus(Status.VALIDATED);
 		entity.setBody(message);
 		fixMessagesService.update(entity);
 	}
 
-	private void updateStatus(FixMessageEntity entity, Status status) {
-		entity.setStatus(status);
+	private void updateStatus(FixMessageEntity entity) {
+		entity.setStatus(Status.SENT_TO_ROUTER);
 		fixMessagesService.update(entity);
 	}
 
@@ -93,5 +104,4 @@ public class BrokerSimulation {
 		entity.setId(fixMessagesService.findId(entity));
 		return entity;
 	}
-
 }

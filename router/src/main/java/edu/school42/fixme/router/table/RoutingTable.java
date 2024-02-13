@@ -1,12 +1,10 @@
 package edu.school42.fixme.router.table;
 
-import edu.school42.fixme.router.exception.RouterException;
+import edu.school42.fixme.common.model.Source;
 import edu.school42.fixme.router.source.ASource;
-import edu.school42.fixme.router.source.BrokerSource;
-import edu.school42.fixme.router.source.MarketSource;
 
+import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -23,19 +21,12 @@ public class RoutingTable {
 		sources.remove(source);
 	}
 
-	public MarketSource findMarketSocket(long marketId) {
-		return sources.stream()
-				.filter(source -> source instanceof MarketSource  && source.getId() == marketId)
-				.map(MarketSource.class::cast)
-				.findAny()
-				.orElseThrow(() -> new RouterException("Unknown Market ID"));
-	}
-	
-	public BrokerSource findBrokerSource(long brokerId) {
-		return sources.stream()
-				.filter(source -> source instanceof BrokerSource && source.getId() == brokerId)
-				.map(BrokerSource.class::cast)
-				.findAny()
-				.orElseThrow(() -> new RouterException("Unknown Broker ID"));
+	public Socket findSocket(long id, Source type) {
+		return sources
+				.stream()
+				.filter(source -> source.getType() == type && source.getId() == id)
+				.findFirst()
+				.map(ASource::getSocket)
+				.orElse(null);
 	}
 }

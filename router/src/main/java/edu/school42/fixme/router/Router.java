@@ -30,8 +30,8 @@ public class Router {
 			FixMessagesService fixMessagesService = new FixMessagesService(new FixMessagesRepository());
 			log.info("Router connected to database");
 
-			executor.submit(new RouterSocket(BROKER_PORT, table, mapper, messageCreator, fixMessagesService));
-			executor.submit(new RouterSocket(MARKET_PORT, table, mapper, messageCreator, fixMessagesService));
+			executor.submit(new RouterSocket(BROKER_PORT, table, mapper, messageCreator, fixMessagesService, executor));
+			executor.submit(new RouterSocket(MARKET_PORT, table, mapper, messageCreator, fixMessagesService, executor));
 
 			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 		} catch	(Exception e) {

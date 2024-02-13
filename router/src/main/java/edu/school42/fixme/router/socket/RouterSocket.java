@@ -18,7 +18,7 @@ import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 
 @Slf4j
 @Accessors(chain = true)
@@ -32,8 +32,7 @@ public class RouterSocket implements Runnable {
 	private final FixMessageMapper mapper;
 	private final MessageCreator messageCreator;
 	private final FixMessagesService fixMessagesService;
-
-	private final Executor executor = Executors.newSingleThreadExecutor();
+	private final ExecutorService executor;
 
 	@Override
 	public void run() {
@@ -55,12 +54,12 @@ public class RouterSocket implements Runnable {
 				};
 				routingTable.add(source);
 
-				PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
-				String message = mapper.toFixString(messageCreator.confirmationOfIdMessage(source.getId(), ID));
-				log.info(message);
-				pw.println(message);
-
-				executor.execute(new MessageProcessor(source, socket, routingTable, mapper, messageCreator, fixMessagesService));
+				try (PrintWriter pw = new PrintWriter(socket.getOutputStream(), true)) {
+					String message = mapper.toFixString(messageCreator.confirmationOfIdMessage(source.getId(), ID));
+					pw.println(message);
+					log.info("sent :: {}", message);
+				}
+				executor.submit(new MessageProcessor(source, socket, routingTable, mapper, messageCreator, fixMessagesService));
 			}
 		} catch (Exception e) {
 			throw new RouterException(e.getMessage());

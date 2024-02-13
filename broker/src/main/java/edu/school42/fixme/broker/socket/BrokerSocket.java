@@ -1,6 +1,7 @@
 package edu.school42.fixme.broker.socket;
 
 import edu.school42.fixme.broker.exception.BrokerException;
+import edu.school42.fixme.broker.processor.InComingMessagesProcessor;
 import edu.school42.fixme.broker.repository.FixMessagesRepository;
 import edu.school42.fixme.broker.service.FixMessagesService;
 import edu.school42.fixme.broker.simulation.BrokerSimulation;
@@ -27,9 +28,10 @@ public class BrokerSocket implements Runnable {
 			FixMessageMapper fixMessageMapper = new FixMessageMapper();
 			FixMessageValidator fixMessageValidator = new BrokerFixValidator(fixMessageMapper);
 			FixMessagesService fixMessagesService = new FixMessagesService(new FixMessagesRepository());
+			InComingMessagesProcessor inComingMessagesProcessor = new InComingMessagesProcessor(socket, fixMessagesService);
 			log.info("Broker connected to database");
 
-			new BrokerSimulation(socket, fixMessageValidator, fixMessageMapper, fixMessagesService).start();
+			new BrokerSimulation(socket, fixMessageValidator, fixMessageMapper, fixMessagesService, inComingMessagesProcessor).start();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new BrokerException(e.getMessage());
