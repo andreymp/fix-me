@@ -6,6 +6,7 @@ import edu.school42.fixme.common.dto.FixMessageDto;
 import edu.school42.fixme.common.model.FixMessageEntity;
 import edu.school42.fixme.common.model.Source;
 import edu.school42.fixme.common.model.Status;
+import edu.school42.fixme.router.Router;
 import edu.school42.fixme.router.exception.RouterException;
 import edu.school42.fixme.router.service.FixMessagesService;
 import edu.school42.fixme.router.source.ASource;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
@@ -29,14 +31,20 @@ public class MessageProcessor implements Runnable {
 
 	private final ASource source;
 	private final Socket socket;
-	private final RoutingTable routingTable;
 	private final FixMessageMapper mapper;
 	private final MessageCreator messageCreator;
 	private final FixMessagesService fixMessagesService;
 
 	@Override
 	public void run() {
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+		try (
+				BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true)
+		) {
+			String message = mapper.toFixString(messageCreator.confirmationOfIdMessage(source.getId(), ROUTER_ID));
+			pw.println(message);
+			log.info("sent :: {}", message);
+
 			while (true) {
 				String line = br.readLine();
 				if (Objects.isNull(line)) {
@@ -46,15 +54,23 @@ public class MessageProcessor implements Runnable {
 				updateStatus(line, Status.RECEIVED_BY_ROUTER);
 				FixMessageDto dto = mapper.toDto(line);
 				if (validateByChecksum(dto)) {
-					forwardMessage(dto);
+					forwardMessage(dto, pw);
 				} else {
-					sendValidationErrorMessage(dto);
+					String errorMessage = mapper.toFixString(messageCreator.validationErrorMessage(source.getId(), dto.getOrderId(), ROUTER_ID));
+					pw.println(errorMessage);
+					log.info("sent :: {}", errorMessage);
 				}
 			}
+			socket.close();
+			Router.ROUTING_TABLE.remove(source);
+			log.info("removed {} with id :: {}", source.getType(), source.getId());
 		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			try {
+				socket.close();
+			} catch (IOException ignored) {
+			}
 			throw new RouterException(e.getMessage());
-		} finally {
-			routingTable.remove(source);
 		}
 	}
 
@@ -65,33 +81,27 @@ public class MessageProcessor implements Runnable {
 		return currChecksum.equals(newChecksum);
 	}
 
-	private void forwardMessage(FixMessageDto dto) {
+	private void forwardMessage(FixMessageDto dto, PrintWriter pw) {
 		try {
 			Socket targetSocket = switch (dto.getType()) {
-				case PLACE_ORDER -> routingTable.findSocket(dto.getTargetId(), Source.BROKER);
-				case HANDLE_ORDER -> routingTable.findSocket(dto.getTargetId(), Source.MARKET);
+				case PLACE_ORDER -> Router.ROUTING_TABLE.findSocket(dto.getTargetId(), Source.MARKET);
+				case HANDLE_ORDER -> Router.ROUTING_TABLE.findSocket(dto.getTargetId(), Source.BROKER);
 				default -> throw new RouterException("unknown message type");
 			};
 			if (Objects.isNull(targetSocket)) {
-				sendValidationErrorMessage(dto);
+				String message = mapper.toFixString(messageCreator.validationErrorMessage(source.getId(), dto.getOrderId(), ROUTER_ID));
+				pw.println(message);
+				log.info("sent :: {}", message);
 				return;
 			}
-			try (PrintWriter pw = new PrintWriter(targetSocket.getOutputStream(), true)) {
+			try (PrintWriter targetPw = new PrintWriter(targetSocket.getOutputStream(), true)) {
 				String message = mapper.toFixString(dto);
-				pw.println(message);
+				targetPw.println(message);
 				log.info("sent :: {}", message);
 				updateStatus(message, Status.SENT_TO_DESTINATION);
 			}
 		} catch (Exception e) {
 			throw new RouterException(e.getMessage());
-		}
-	}
-
-	private void sendValidationErrorMessage(FixMessageDto dto) throws SocketException {
-		try (PrintWriter pw = new PrintWriter(socket.getOutputStream(), true)) {
-			pw.println(mapper.toFixString(messageCreator.validationErrorMessage(source.getId(), dto.getOrderId(), ROUTER_ID)));
-		} catch (IOException e) {
-			throw new SocketException(e.getMessage());
 		}
 	}
 

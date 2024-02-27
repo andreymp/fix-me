@@ -17,25 +17,29 @@ public class FixMessagesRepository {
 		this.entityManager = factory.createEntityManager();
 	}
 
-	@Transactional
 	public void insert(FixMessageEntity entity) {
+		entityManager.getTransaction().begin();
 		entityManager.persist(entity);
+		entityManager.getTransaction().commit();
 	}
 
-	@Transactional
 	public void update(FixMessageEntity entity) {
+		entityManager.getTransaction().begin();
 		entityManager.merge(entity);
+		entityManager.getTransaction().commit();
 	}
 
-	@Transactional
 	public FixMessageEntity findByBody(String body) {
 		String query = String.format("""
 				SELECT f
 				FROM FixMessageEntity f
 				WHERE f.body = '%s'
 				""", body);
-		return (FixMessageEntity) entityManager.createQuery(query)
+		entityManager.getTransaction().begin();
+		FixMessageEntity entity = entityManager.createQuery(query, FixMessageEntity.class)
 				.getSingleResult();
+		entityManager.getTransaction().commit();
+		return entity;
 	}
 
 	public void	close() {

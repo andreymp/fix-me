@@ -35,6 +35,8 @@ public abstract class MessageHandler {
 	protected FixMessageDto getReject(FixMessageDto responseDto, String message) {
 		responseDto.setOrdStatus(MarketOptions.REJECTED);
 		responseDto.setOrdRejReason(message);
+		responseDto.countBodyLength();
+		responseDto.countChecksum();
 		return responseDto;
 	}
 }

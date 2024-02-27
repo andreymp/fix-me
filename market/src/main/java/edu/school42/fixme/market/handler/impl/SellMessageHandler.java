@@ -32,6 +32,8 @@ public class SellMessageHandler extends MessageHandler {
 		quantity += dto.getQuantity();
 		money -= dto.getPrice();
 		responseDto.setOrdStatus(MarketOptions.EXECUTED);
+		responseDto.countBodyLength();
+		responseDto.countChecksum();
 		return mapper.toFixString(responseDto);
 	}
 }

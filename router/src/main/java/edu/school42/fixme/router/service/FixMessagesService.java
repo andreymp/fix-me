@@ -11,12 +11,10 @@ public class FixMessagesService {
 
 	private final FixMessagesRepository fixMessageRepository;
 
-	@Transactional
 	public FixMessageEntity findByBody(String body) {
 		return fixMessageRepository.findByBody(body);
 	}
 
-	@Transactional
 	public void update(FixMessageEntity entity) {
 		fixMessageRepository.update(entity);
 	}

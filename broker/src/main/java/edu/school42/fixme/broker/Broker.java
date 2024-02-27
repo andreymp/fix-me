@@ -4,21 +4,17 @@ import edu.school42.fixme.broker.exception.BrokerException;
 import edu.school42.fixme.broker.socket.BrokerSocket;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 @Slf4j
 public class Broker {
 
 	public static final long ID = System.currentTimeMillis();
 	private static final int BROKER_PORT = 5000;
 
-	private final Executor executor = Executors.newSingleThreadExecutor();
 
 	public void start() {
 		try {
-			log.info("broker started with id :: {}", ID);
-			executor.execute(new BrokerSocket(BROKER_PORT));
+			log.info("broker id :: {}", ID);
+			new BrokerSocket(BROKER_PORT).start();
 		} catch	(BrokerException e) {
 			throw new BrokerException(e.getMessage());
 		}

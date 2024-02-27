@@ -2,6 +2,7 @@ package edu.school42.fixme.router.socket;
 
 import edu.school42.fixme.common.converter.FixMessageMapper;
 import edu.school42.fixme.common.creator.MessageCreator;
+import edu.school42.fixme.router.Router;
 import edu.school42.fixme.router.exception.RouterException;
 import edu.school42.fixme.router.proccessor.MessageProcessor;
 import edu.school42.fixme.router.service.FixMessagesService;
@@ -19,20 +20,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Accessors(chain = true)
 @RequiredArgsConstructor
 public class RouterSocket implements Runnable {
-
-	private static final int ID = 0;
-
 	private final int port;
-	private final RoutingTable routingTable;
 	private final FixMessageMapper mapper;
 	private final MessageCreator messageCreator;
 	private final FixMessagesService fixMessagesService;
-	private final ExecutorService executor;
+	private final Executor executor = Executors.newSingleThreadExecutor();
 
 	@Override
 	public void run() {
@@ -40,7 +39,6 @@ public class RouterSocket implements Runnable {
 			log.info("server-socket started at port :: {}", serverSocket.getLocalPort());
 			while (true) {
 				Socket socket = serverSocket.accept();
-
 				ASource source = switch (socket.getLocalPort()) {
 					case 5000 -> {
 						log.info("connected new broker");
@@ -52,14 +50,9 @@ public class RouterSocket implements Runnable {
 					}
 					default -> throw new RouterException(String.format("unknown port :: %d", socket.getPort()));
 				};
-				routingTable.add(source);
-
-				try (PrintWriter pw = new PrintWriter(socket.getOutputStream(), true)) {
-					String message = mapper.toFixString(messageCreator.confirmationOfIdMessage(source.getId(), ID));
-					pw.println(message);
-					log.info("sent :: {}", message);
-				}
-				executor.submit(new MessageProcessor(source, socket, routingTable, mapper, messageCreator, fixMessagesService));
+				Router.ROUTING_TABLE.add(source);
+				log.info("added {} with id :: {}", source.getType(), source.getId());
+				executor.execute(new MessageProcessor(source, socket, mapper, messageCreator, fixMessagesService));
 			}
 		} catch (Exception e) {
 			throw new RouterException(e.getMessage());

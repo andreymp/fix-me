@@ -13,11 +13,11 @@ public class Market {
 	public static final long ID = System.currentTimeMillis();
 	private static final int MARKET_PORT = 5001;
 
-	private final Executor executor = Executors.newSingleThreadExecutor();
 
 	public void start() {
 		try {
-			executor.execute(new MarketSocket(MARKET_PORT));
+			log.info("market id :: {}", ID);
+			new MarketSocket(MARKET_PORT).start();
 		} catch	(Exception e) {
 			log.error(e.getMessage(), e);
 			throw new MarketException(e.getMessage());
