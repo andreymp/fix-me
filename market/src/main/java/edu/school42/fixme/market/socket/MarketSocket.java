@@ -43,22 +43,24 @@ public class MarketSocket {
 					break ;
 				}
 				log.info("received :: {}", line);
-				updateStatus(line, Status.COMPLETED);
+				if (!line.contains("35=C|") && !line.contains("35=V|")) {
+					updateStatus(line, Status.COMPLETED);
 
-				FixMessageDto dto = mapper.toDto(line);
-				String incomingMessage = switch (dto.getSide()) {
-					case BUY -> new BuyMessageHandler(mapper).handle(dto);
-					case SELL -> new SellMessageHandler(mapper).handle(dto);
-				};
-				FixMessageEntity entity = new FixMessageEntity();
-				entity.setBody(incomingMessage);
-				entity.setSource(Source.MARKET);
-				entity.setStatus(Status.CREATED);
-				fixMessagesService.insert(entity);
+					FixMessageDto dto = mapper.toDto(line);
+					String incomingMessage = switch (dto.getSide()) {
+						case BUY -> new BuyMessageHandler(mapper).handle(dto);
+						case SELL -> new SellMessageHandler(mapper).handle(dto);
+					};
+					FixMessageEntity entity = new FixMessageEntity();
+					entity.setBody(incomingMessage);
+					entity.setSource(Source.MARKET);
+					entity.setStatus(Status.CREATED);
+					fixMessagesService.insert(entity);
 
-				pw.println(incomingMessage);
-				log.info("sent :: {}", incomingMessage);
-				updateStatus(incomingMessage, Status.SENT_TO_ROUTER);
+					pw.println(incomingMessage);
+					log.info("sent :: {}", incomingMessage);
+					updateStatus(incomingMessage, Status.SENT_TO_ROUTER);
+				}
 			}
 		} catch (Exception e) {
 			log.info(e.getMessage(), e);

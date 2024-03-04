@@ -17,11 +17,11 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class Router {
 	public static final RoutingTable ROUTING_TABLE = new RoutingTable();
+	public static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(100);
 
 	private static final int BROKER_PORT = 5000;
 	private static final int MARKET_PORT = 5001;
 
-	private final ExecutorService executor = Executors.newFixedThreadPool(2);
 
 	public void start() {
 		try {
@@ -30,10 +30,10 @@ public class Router {
 			FixMessagesService fixMessagesService = new FixMessagesService(new FixMessagesRepository());
 			log.info("Router connected to database");
 
-			executor.submit(new RouterSocket(BROKER_PORT, mapper, messageCreator, fixMessagesService));
-			executor.submit(new RouterSocket(MARKET_PORT, mapper, messageCreator, fixMessagesService));
+			EXECUTOR_SERVICE.submit(new RouterSocket(BROKER_PORT, mapper, messageCreator, fixMessagesService));
+			EXECUTOR_SERVICE.submit(new RouterSocket(MARKET_PORT, mapper, messageCreator, fixMessagesService));
 
-			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+			EXECUTOR_SERVICE.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 		} catch	(Exception e) {
 			log.error(e.getMessage(), e);
 			throw new RouterException(e.getMessage());

@@ -6,8 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 public class RoutingTable {
@@ -19,11 +21,19 @@ public class RoutingTable {
 		sources.sort(Comparator.comparingLong(ASource::getId).reversed());
 	}
 
+	public void replaceBrokerSourceId(ASource source, Long newId) {
+		sources
+				.stream()
+				.filter(aSource -> aSource.equals(source))
+				.findAny()
+				.ifPresent(aSource -> aSource.setId(newId));
+	}
+
 	public void remove(ASource source) {
 		sources.remove(source);
 	}
 
-	public Socket findSocket(long id, Source type) {
+	public AtomicReference<Socket> findSocket(long id, Source type) {
 		return sources
 				.stream()
 				.filter(source -> source.getType() == type && source.getId() == id)

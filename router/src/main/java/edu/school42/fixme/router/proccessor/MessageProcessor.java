@@ -22,6 +22,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class MessageProcessor implements Runnable {
 	private static final int ROUTER_ID = 0;
 
 	private final ASource source;
-	private final Socket socket;
+	private final AtomicReference<Socket> socket;
 	private final FixMessageMapper mapper;
 	private final MessageCreator messageCreator;
 	private final FixMessagesService fixMessagesService;
@@ -38,8 +39,8 @@ public class MessageProcessor implements Runnable {
 	@Override
 	public void run() {
 		try (
-				BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true)
+				BufferedReader br = new BufferedReader(new InputStreamReader(socket.get().getInputStream()));
+				PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.get().getOutputStream()), true)
 		) {
 			String message = mapper.toFixString(messageCreator.confirmationOfIdMessage(source.getId(), ROUTER_ID));
 			pw.println(message);
@@ -58,16 +59,16 @@ public class MessageProcessor implements Runnable {
 				} else {
 					String errorMessage = mapper.toFixString(messageCreator.validationErrorMessage(source.getId(), dto.getOrderId(), ROUTER_ID));
 					pw.println(errorMessage);
-					log.info("sent :: {}", errorMessage);
+					log.info("sent:: {}", errorMessage);
 				}
 			}
-			socket.close();
+			socket.get().close();
 			Router.ROUTING_TABLE.remove(source);
 			log.info("removed {} with id :: {}", source.getType(), source.getId());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			try {
-				socket.close();
+				socket.get().close();
 			} catch (IOException ignored) {
 			}
 			throw new RouterException(e.getMessage());
@@ -83,8 +84,11 @@ public class MessageProcessor implements Runnable {
 
 	private void forwardMessage(FixMessageDto dto, PrintWriter pw) {
 		try {
-			Socket targetSocket = switch (dto.getType()) {
-				case PLACE_ORDER -> Router.ROUTING_TABLE.findSocket(dto.getTargetId(), Source.MARKET);
+			AtomicReference<Socket> targetSocket = switch (dto.getType()) {
+				case PLACE_ORDER -> {
+					Router.ROUTING_TABLE.replaceBrokerSourceId(source, dto.getSendersId());
+					yield Router.ROUTING_TABLE.findSocket(dto.getTargetId(), Source.MARKET);
+				}
 				case HANDLE_ORDER -> Router.ROUTING_TABLE.findSocket(dto.getTargetId(), Source.BROKER);
 				default -> throw new RouterException("unknown message type");
 			};
@@ -94,13 +98,13 @@ public class MessageProcessor implements Runnable {
 				log.info("sent :: {}", message);
 				return;
 			}
-			try (PrintWriter targetPw = new PrintWriter(targetSocket.getOutputStream(), true)) {
-				String message = mapper.toFixString(dto);
-				targetPw.println(message);
-				log.info("sent :: {}", message);
-				updateStatus(message, Status.SENT_TO_DESTINATION);
-			}
+			PrintWriter targetPw = new PrintWriter(targetSocket.get().getOutputStream(), true);
+			String message = mapper.toFixString(dto);
+			targetPw.println(message);
+			log.info("sent :: {}", message);
+			updateStatus(message, Status.SENT_TO_DESTINATION);
 		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 			throw new RouterException(e.getMessage());
 		}
 	}

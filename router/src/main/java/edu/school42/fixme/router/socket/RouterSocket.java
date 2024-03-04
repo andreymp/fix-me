@@ -18,10 +18,13 @@ import java.io.PrintWriter;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Accessors(chain = true)
@@ -31,15 +34,14 @@ public class RouterSocket implements Runnable {
 	private final FixMessageMapper mapper;
 	private final MessageCreator messageCreator;
 	private final FixMessagesService fixMessagesService;
-	private final Executor executor = Executors.newSingleThreadExecutor();
 
 	@Override
 	public void run() {
 		try (ServerSocket serverSocket = new ServerSocket(port, 1000, Inet4Address.getByName("0.0.0.0"))) {
 			log.info("server-socket started at port :: {}", serverSocket.getLocalPort());
 			while (true) {
-				Socket socket = serverSocket.accept();
-				ASource source = switch (socket.getLocalPort()) {
+				AtomicReference<Socket> socket = new AtomicReference<>(serverSocket.accept());
+				ASource source = switch (socket.get().getLocalPort()) {
 					case 5000 -> {
 						log.info("connected new broker");
 						yield new BrokerSource(socket);
@@ -48,11 +50,11 @@ public class RouterSocket implements Runnable {
 						log.info("connected new market");
 						yield new MarketSource(socket);
 					}
-					default -> throw new RouterException(String.format("unknown port :: %d", socket.getPort()));
+					default -> throw new RouterException(String.format("unknown port :: %d", socket.get().getPort()));
 				};
 				Router.ROUTING_TABLE.add(source);
 				log.info("added {} with id :: {}", source.getType(), source.getId());
-				executor.execute(new MessageProcessor(source, socket, mapper, messageCreator, fixMessagesService));
+				Router.EXECUTOR_SERVICE.execute(new MessageProcessor(source, socket, mapper, messageCreator, fixMessagesService));
 			}
 		} catch (Exception e) {
 			throw new RouterException(e.getMessage());
