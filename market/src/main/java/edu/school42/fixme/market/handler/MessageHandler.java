@@ -5,20 +5,19 @@ import edu.school42.fixme.common.dto.FixMessageDto;
 import edu.school42.fixme.common.dto.MessageType;
 import edu.school42.fixme.common.options.MarketOptions;
 import edu.school42.fixme.market.Market;
+import edu.school42.fixme.market.dto.InstrumentDto;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @RequiredArgsConstructor
 public abstract class MessageHandler {
-
-	protected final List<String> instruments = List.of("SRR", "OAS", "CAS", "IP", "SE");
-
-	protected int quantity = ThreadLocalRandom.current().nextInt(100, 1_000);
-	protected double money = ThreadLocalRandom.current().nextDouble(1_000.0D, 1_000_000.0D);
-
 	protected final FixMessageMapper mapper;
+
+	protected List<InstrumentDto> instruments = new ArrayList<>();
+	protected double money = 0;
 
 	public abstract String handle(FixMessageDto dto);
 

@@ -4,33 +4,32 @@ import edu.school42.fixme.common.converter.FixMessageMapper;
 import edu.school42.fixme.common.dto.FixMessageDto;
 import edu.school42.fixme.common.options.MarketOptions;
 import edu.school42.fixme.market.Market;
+import edu.school42.fixme.market.dto.InstrumentDto;
 import edu.school42.fixme.market.handler.MessageHandler;
 
-public class BuyMessageHandler extends MessageHandler {
+import java.util.Collections;
+import java.util.Objects;
 
-	private static final double MIN_BUY_PRICE = 1500.0D;
+public class BuyMessageHandler extends MessageHandler {
 
 	public BuyMessageHandler(FixMessageMapper mapper) {
 		super(mapper);
 	}
 
 	@Override
-	public String handle(FixMessageDto dto) {
-		FixMessageDto responseDto = createHeader(dto);
-		if (!instruments.contains(dto.getInstrument())) {
-			return mapper.toFixString(getReject(responseDto, "wrong instrument"));
+	public String handle(FixMessageDto fixMessageDto) {
+		FixMessageDto responseDto = createHeader(fixMessageDto);
+		int instrumentIdx = instruments.indexOf(new InstrumentDto().setInstrument(fixMessageDto.getInstrument()));
+		if (instrumentIdx == -1) {
+			return mapper.toFixString(getReject(responseDto, "instrument not found"));
 		}
-		if (dto.getQuantity() > quantity) {
-			return mapper.toFixString(getReject(responseDto, "big quantity"));
+		int quantity = instruments.get(instrumentIdx).getQuantity() - fixMessageDto.getQuantity();
+		if (quantity < 0) {
+			return mapper.toFixString(getReject(responseDto, "not enough quantity"));
 		}
-		if (dto.getMarket() != Market.ID) {
-			return mapper.toFixString(getReject(responseDto, "wrong market"));
-		}
-		if (dto.getPrice() < MIN_BUY_PRICE) {
-			return mapper.toFixString(getReject(responseDto, "low price"));
-		}
-		quantity -= dto.getQuantity();
-		money += dto.getPrice();
+		instruments.get(instrumentIdx).setQuantity(quantity);
+		super.money += fixMessageDto.getPrice() * quantity;
+
 		responseDto.setOrdStatus(MarketOptions.EXECUTED);
 		responseDto.countBodyLength();
 		responseDto.countChecksum();

@@ -4,33 +4,35 @@ import edu.school42.fixme.common.converter.FixMessageMapper;
 import edu.school42.fixme.common.dto.FixMessageDto;
 import edu.school42.fixme.common.options.MarketOptions;
 import edu.school42.fixme.market.Market;
+import edu.school42.fixme.market.dto.InstrumentDto;
 import edu.school42.fixme.market.handler.MessageHandler;
 
-public class SellMessageHandler extends MessageHandler {
+import java.util.Objects;
 
-	private static final int MIN_SELL_QUANTITY = 50;
+public class SellMessageHandler extends MessageHandler {
 
 	public SellMessageHandler(FixMessageMapper mapper) {
 		super(mapper);
 	}
 
 	@Override
-	public String handle(FixMessageDto dto) {
-		FixMessageDto responseDto = createHeader(dto);
-		if (!instruments.contains(dto.getInstrument())) {
-			return mapper.toFixString(getReject(responseDto, "wrong instrument"));
+	public String handle(FixMessageDto fixMessageDto) {
+		FixMessageDto responseDto = createHeader(fixMessageDto);
+		if (super.money - fixMessageDto.getPrice() * fixMessageDto.getQuantity() < 0) {
+			return mapper.toFixString(getReject(responseDto, "market cannot afford this instrument"));
 		}
-		if (dto.getQuantity() < MIN_SELL_QUANTITY) {
-			return mapper.toFixString(getReject(responseDto, "low quantity"));
+		money -= fixMessageDto.getPrice() * fixMessageDto.getQuantity();
+
+		int instrumentIdx = instruments.indexOf(new InstrumentDto().setInstrument(fixMessageDto.getInstrument()));
+		if (instrumentIdx == -1) {
+			var instrumentDto = new InstrumentDto();
+			instrumentDto.setInstrument(fixMessageDto.getInstrument());
+			instrumentDto.setQuantity(fixMessageDto.getQuantity());
+			instruments.add(instrumentDto);
+		} else {
+			instruments.get(instrumentIdx)
+					.setQuantity(instruments.get(instrumentIdx).getQuantity() + fixMessageDto.getQuantity());
 		}
-		if (dto.getMarket() != Market.ID) {
-			return mapper.toFixString(getReject(responseDto, "wrong market"));
-		}
-		if (dto.getPrice() > money) {
-			return mapper.toFixString(getReject(responseDto, "high price"));
-		}
-		quantity += dto.getQuantity();
-		money -= dto.getPrice();
 		responseDto.setOrdStatus(MarketOptions.EXECUTED);
 		responseDto.countBodyLength();
 		responseDto.countChecksum();
