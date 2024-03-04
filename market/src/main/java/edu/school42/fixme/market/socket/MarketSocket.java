@@ -5,6 +5,7 @@ import edu.school42.fixme.common.dto.FixMessageDto;
 import edu.school42.fixme.common.model.FixMessageEntity;
 import edu.school42.fixme.common.model.Source;
 import edu.school42.fixme.common.model.Status;
+import edu.school42.fixme.market.dto.InstrumentDto;
 import edu.school42.fixme.market.exception.MarketException;
 import edu.school42.fixme.market.handler.impl.BuyMessageHandler;
 import edu.school42.fixme.market.handler.impl.SellMessageHandler;
@@ -17,7 +18,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,6 +41,7 @@ public class MarketSocket {
 				BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()))
 		) {
 			log.info("received :: {}", br.readLine());
+
 			while (true) {
 				String line = br.readLine();
 				if (Objects.isNull(line)) {

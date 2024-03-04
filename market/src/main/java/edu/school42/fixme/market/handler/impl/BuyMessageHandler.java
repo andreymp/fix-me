@@ -8,6 +8,7 @@ import edu.school42.fixme.market.dto.InstrumentDto;
 import edu.school42.fixme.market.handler.MessageHandler;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class BuyMessageHandler extends MessageHandler {
@@ -16,19 +17,18 @@ public class BuyMessageHandler extends MessageHandler {
 		super(mapper);
 	}
 
-	@Override
 	public String handle(FixMessageDto fixMessageDto) {
 		FixMessageDto responseDto = createHeader(fixMessageDto);
-		int instrumentIdx = instruments.indexOf(new InstrumentDto().setInstrument(fixMessageDto.getInstrument()));
+		int instrumentIdx = Market.INSTRUMENTS.indexOf(new InstrumentDto().setInstrument(fixMessageDto.getInstrument()));
 		if (instrumentIdx == -1) {
 			return mapper.toFixString(getReject(responseDto, "instrument not found"));
 		}
-		int quantity = instruments.get(instrumentIdx).getQuantity() - fixMessageDto.getQuantity();
+		int quantity = Market.INSTRUMENTS.get(instrumentIdx).getQuantity() - fixMessageDto.getQuantity();
 		if (quantity < 0) {
 			return mapper.toFixString(getReject(responseDto, "not enough quantity"));
 		}
-		instruments.get(instrumentIdx).setQuantity(quantity);
-		super.money += fixMessageDto.getPrice() * quantity;
+		Market.INSTRUMENTS.get(instrumentIdx).setQuantity(quantity);
+		Market.MONEY += fixMessageDto.getPrice() * quantity;
 
 		responseDto.setOrdStatus(MarketOptions.EXECUTED);
 		responseDto.countBodyLength();

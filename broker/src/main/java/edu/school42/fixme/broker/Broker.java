@@ -13,7 +13,6 @@ public class Broker {
 
 	public void start() {
 		try {
-			log.info("broker id :: {}", ID);
 			new BrokerSocket(BROKER_PORT).start();
 		} catch	(BrokerException e) {
 			throw new BrokerException(e.getMessage());

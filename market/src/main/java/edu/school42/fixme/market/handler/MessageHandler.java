@@ -16,9 +16,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public abstract class MessageHandler {
 	protected final FixMessageMapper mapper;
 
-	protected List<InstrumentDto> instruments = new ArrayList<>();
-	protected double money = 0;
-
 	public abstract String handle(FixMessageDto dto);
 
 	protected FixMessageDto createHeader(FixMessageDto dto) {
@@ -26,7 +23,7 @@ public abstract class MessageHandler {
 		header.setId(ThreadLocalRandom.current().nextInt(Integer.MIN_VALUE, 0));
 		header.setOrderId(dto.getOrderId());
 		header.setType(MessageType.HANDLE_ORDER);
-		header.setSendersId(Market.ID);
+		header.setSendersId(dto.getTargetId());
 		header.setTargetId(dto.getSendersId());
 		return header;
 	}

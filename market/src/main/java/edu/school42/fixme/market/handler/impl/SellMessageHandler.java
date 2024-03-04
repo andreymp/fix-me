@@ -7,6 +7,7 @@ import edu.school42.fixme.market.Market;
 import edu.school42.fixme.market.dto.InstrumentDto;
 import edu.school42.fixme.market.handler.MessageHandler;
 
+import java.util.List;
 import java.util.Objects;
 
 public class SellMessageHandler extends MessageHandler {
@@ -15,23 +16,22 @@ public class SellMessageHandler extends MessageHandler {
 		super(mapper);
 	}
 
-	@Override
 	public String handle(FixMessageDto fixMessageDto) {
 		FixMessageDto responseDto = createHeader(fixMessageDto);
-		if (super.money - fixMessageDto.getPrice() * fixMessageDto.getQuantity() < 0) {
+		if (Market.MONEY - fixMessageDto.getPrice() * fixMessageDto.getQuantity() < 0) {
 			return mapper.toFixString(getReject(responseDto, "market cannot afford this instrument"));
 		}
-		money -= fixMessageDto.getPrice() * fixMessageDto.getQuantity();
+		Market.MONEY -= fixMessageDto.getPrice() * fixMessageDto.getQuantity();
 
-		int instrumentIdx = instruments.indexOf(new InstrumentDto().setInstrument(fixMessageDto.getInstrument()));
+		int instrumentIdx = Market.INSTRUMENTS.indexOf(new InstrumentDto().setInstrument(fixMessageDto.getInstrument()));
 		if (instrumentIdx == -1) {
 			var instrumentDto = new InstrumentDto();
 			instrumentDto.setInstrument(fixMessageDto.getInstrument());
 			instrumentDto.setQuantity(fixMessageDto.getQuantity());
-			instruments.add(instrumentDto);
+			Market.INSTRUMENTS.add(instrumentDto);
 		} else {
-			instruments.get(instrumentIdx)
-					.setQuantity(instruments.get(instrumentIdx).getQuantity() + fixMessageDto.getQuantity());
+			Market.INSTRUMENTS.get(instrumentIdx)
+					.setQuantity(Market.INSTRUMENTS.get(instrumentIdx).getQuantity() + fixMessageDto.getQuantity());
 		}
 		responseDto.setOrdStatus(MarketOptions.EXECUTED);
 		responseDto.countBodyLength();
