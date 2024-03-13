@@ -3,8 +3,6 @@ package edu.school42.fixme.router;
 import edu.school42.fixme.common.converter.FixMessageMapper;
 import edu.school42.fixme.common.creator.MessageCreator;
 import edu.school42.fixme.router.exception.RouterException;
-import edu.school42.fixme.router.repository.FixMessagesRepository;
-import edu.school42.fixme.router.service.FixMessagesService;
 import edu.school42.fixme.router.socket.RouterSocket;
 import edu.school42.fixme.router.table.RoutingTable;
 import lombok.extern.slf4j.Slf4j;
@@ -27,15 +25,13 @@ public class Router {
 		try {
 			FixMessageMapper mapper = new FixMessageMapper();
 			MessageCreator messageCreator = MessageCreator.getInstance();
-			FixMessagesService fixMessagesService = new FixMessagesService(new FixMessagesRepository());
 			log.info("Router connected to database");
 
-			EXECUTOR_SERVICE.submit(new RouterSocket(BROKER_PORT, mapper, messageCreator, fixMessagesService));
-			EXECUTOR_SERVICE.submit(new RouterSocket(MARKET_PORT, mapper, messageCreator, fixMessagesService));
+			EXECUTOR_SERVICE.submit(new RouterSocket(BROKER_PORT, mapper, messageCreator));
+			EXECUTOR_SERVICE.submit(new RouterSocket(MARKET_PORT, mapper, messageCreator));
 
 			EXECUTOR_SERVICE.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 		} catch	(Exception e) {
-			log.error(e.getMessage(), e);
 			throw new RouterException(e.getMessage());
 		}
 	}

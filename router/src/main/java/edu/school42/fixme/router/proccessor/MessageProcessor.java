@@ -3,14 +3,10 @@ package edu.school42.fixme.router.proccessor;
 import edu.school42.fixme.common.converter.FixMessageMapper;
 import edu.school42.fixme.common.creator.MessageCreator;
 import edu.school42.fixme.common.dto.FixMessageDto;
-import edu.school42.fixme.common.model.FixMessageEntity;
 import edu.school42.fixme.common.model.Source;
-import edu.school42.fixme.common.model.Status;
 import edu.school42.fixme.router.Router;
 import edu.school42.fixme.router.exception.RouterException;
-import edu.school42.fixme.router.service.FixMessagesService;
 import edu.school42.fixme.router.source.ASource;
-import edu.school42.fixme.router.table.RoutingTable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +16,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -34,7 +29,6 @@ public class MessageProcessor implements Runnable {
 	private final AtomicReference<Socket> socket;
 	private final FixMessageMapper mapper;
 	private final MessageCreator messageCreator;
-	private final FixMessagesService fixMessagesService;
 
 	@Override
 	public void run() {
@@ -52,7 +46,6 @@ public class MessageProcessor implements Runnable {
 					break ;
 				}
 				log.info("received :: {}", line);
-				updateStatus(line, Status.RECEIVED_BY_ROUTER);
 				FixMessageDto dto = mapper.toDto(line);
 				if (validateByChecksum(dto)) {
 					forwardMessage(dto, pw);
@@ -66,7 +59,6 @@ public class MessageProcessor implements Runnable {
 			Router.ROUTING_TABLE.remove(source);
 			log.info("removed {} with id :: {}", source.getType(), source.getId());
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
 			try {
 				socket.get().close();
 			} catch (IOException ignored) {
@@ -102,16 +94,8 @@ public class MessageProcessor implements Runnable {
 			String message = mapper.toFixString(dto);
 			targetPw.println(message);
 			log.info("sent :: {}", message);
-			updateStatus(message, Status.SENT_TO_DESTINATION);
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
 			throw new RouterException(e.getMessage());
 		}
-	}
-
-	private void updateStatus(String message, Status status) {
-		FixMessageEntity entity = fixMessagesService.findByBody(message);
-		entity.setStatus(status);
-		fixMessagesService.update(entity);
 	}
 }

@@ -5,25 +5,16 @@ import edu.school42.fixme.common.creator.MessageCreator;
 import edu.school42.fixme.router.Router;
 import edu.school42.fixme.router.exception.RouterException;
 import edu.school42.fixme.router.proccessor.MessageProcessor;
-import edu.school42.fixme.router.service.FixMessagesService;
 import edu.school42.fixme.router.source.ASource;
 import edu.school42.fixme.router.source.BrokerSource;
 import edu.school42.fixme.router.source.MarketSource;
-import edu.school42.fixme.router.table.RoutingTable;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.PrintWriter;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
@@ -33,7 +24,6 @@ public class RouterSocket implements Runnable {
 	private final int port;
 	private final FixMessageMapper mapper;
 	private final MessageCreator messageCreator;
-	private final FixMessagesService fixMessagesService;
 
 	@Override
 	public void run() {
@@ -54,7 +44,7 @@ public class RouterSocket implements Runnable {
 				};
 				Router.ROUTING_TABLE.add(source);
 				log.info("added {} with id :: {}", source.getType(), source.getId());
-				Router.EXECUTOR_SERVICE.execute(new MessageProcessor(source, socket, mapper, messageCreator, fixMessagesService));
+				Router.EXECUTOR_SERVICE.execute(new MessageProcessor(source, socket, mapper, messageCreator));
 			}
 		} catch (Exception e) {
 			throw new RouterException(e.getMessage());

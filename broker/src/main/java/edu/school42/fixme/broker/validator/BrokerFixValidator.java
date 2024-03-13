@@ -31,6 +31,9 @@ public class BrokerFixValidator extends FixMessageValidator {
 		Map<Integer, Object> fixMessageAsMap = new HashMap<>();
 		Arrays.stream(message.split("\\|")).forEach(section -> {
 			String[] splitSection = section.split("=");
+			if (splitSection.length != 2) {
+				throw new FixMessageValidationException(ERROR_MESSAGE);
+			}
 			fixMessageAsMap.put(Integer.parseInt(splitSection[0]), splitSection[1]);
 		});
 
@@ -46,9 +49,14 @@ public class BrokerFixValidator extends FixMessageValidator {
 			throw new FixMessageValidationException(ERROR_MESSAGE);
 		}
 		dto.setInstrument((String) fixMessageAsMap.get(FixMessageUtil.INSTRUMENT));
-		dto.setQuantity(Integer.parseInt((String) fixMessageAsMap.get(FixMessageUtil.QUANTITY)));
+		int quantity = Integer.parseInt((String) fixMessageAsMap.get(FixMessageUtil.QUANTITY));
+		double price = Double.parseDouble((String) fixMessageAsMap.get(FixMessageUtil.PRICE));
+		if (quantity < 0 || price < 0D) {
+			throw new FixMessageValidationException(ERROR_MESSAGE);
+		}
+		dto.setQuantity(quantity);
 		dto.setMarket(dto.getTargetId());
-		dto.setPrice(Double.parseDouble((String) fixMessageAsMap.get(FixMessageUtil.PRICE)));
+		dto.setPrice(price);
 		dto.countBodyLength();
 		dto.countChecksum();
 		return dto;

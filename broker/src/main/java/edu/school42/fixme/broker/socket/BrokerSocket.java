@@ -1,14 +1,9 @@
 package edu.school42.fixme.broker.socket;
 
 import edu.school42.fixme.broker.exception.BrokerException;
-import edu.school42.fixme.broker.repository.FixMessagesRepository;
-import edu.school42.fixme.broker.service.FixMessagesService;
 import edu.school42.fixme.broker.validator.BrokerFixValidator;
 import edu.school42.fixme.common.converter.FixMessageMapper;
 import edu.school42.fixme.common.exception.FixMessageValidationException;
-import edu.school42.fixme.common.model.FixMessageEntity;
-import edu.school42.fixme.common.model.Source;
-import edu.school42.fixme.common.model.Status;
 import edu.school42.fixme.common.validation.FixMessageValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +25,6 @@ public class BrokerSocket {
 	private final int port;
 
 	private final FixMessageMapper mapper = new FixMessageMapper();
-	private final FixMessagesService fixMessagesService = new FixMessagesService(new FixMessagesRepository());
 
 	public void start() throws BrokerException {
 		log.info("""
@@ -38,11 +32,11 @@ public class BrokerSocket {
 
 				FIX: tag=value|
 				TAGS:
-						1. 54 -> side: BUY or SELL
-						2. 55 -> instrument
-						3. 53 -> quantity
-						4. 262 -> market destination ID
-						5. 44 -> price
+				1. 54 -> side: BUY or SELL
+				2. 55 -> instrument
+				3. 53 -> quantity
+				4. 262 -> market destination ID
+				5. 44 -> price
 				""");
 		try (
 				Socket socket = new Socket(HOST, port);
@@ -54,23 +48,19 @@ public class BrokerSocket {
 			FixMessageValidator validator = new BrokerFixValidator(mapper);
 			while (sc.hasNext()) {
 				String message = sc.nextLine();
-				FixMessageEntity entity = createMessageEntity(message);
-				String incomingMessage = mapper.toFixString(validator.validate(message));
+				log.info("line :: \"{}\"", message);
+				try {
+					String incomingMessage = mapper.toFixString(validator.validate(message));
 
-				updateStatus(entity, incomingMessage);
-				pw.println(incomingMessage);
-				log.info("sent :: {}", incomingMessage);
-				updateStatus(entity);
-				handleResponse(br);
+					pw.println(incomingMessage);
+					log.info("sent :: {}", incomingMessage);
+					handleResponse(br);
+				} catch (FixMessageValidationException e) {
+					log.error(e.getMessage());
+				}
 			}
-		} catch (FixMessageValidationException e) {
-			log.error(e.getMessage(), e);
 		} catch (IOException e) {
-			fixMessagesService.close();
-			log.error(e.getMessage(), e);
 			throw new BrokerException(e.getMessage());
-		} finally {
-			fixMessagesService.close();
 		}
 	}
 
@@ -80,33 +70,6 @@ public class BrokerSocket {
 		String message = br.readLine();
 		if (Objects.nonNull(message)) {
 			log.info("received :: {}", message);
-
-			if (!message.contains("35=C|") && !message.contains("35=V|")) {
-				FixMessageEntity entity = fixMessagesService.findByBody(message);
-				entity.setStatus(Status.COMPLETED);
-				fixMessagesService.update(entity);
-			}
 		}
-	}
-
-	private void updateStatus(FixMessageEntity entity, String message) {
-		entity.setStatus(Status.VALIDATED);
-		entity.setBody(message);
-		fixMessagesService.update(entity);
-	}
-
-	private void updateStatus(FixMessageEntity entity) {
-		entity.setStatus(Status.SENT_TO_ROUTER);
-		fixMessagesService.update(entity);
-	}
-
-	private FixMessageEntity createMessageEntity(String message) {
-		FixMessageEntity entity = new FixMessageEntity();
-		entity.setSource(Source.BROKER);
-		entity.setStatus(Status.CREATED);
-		entity.setBody(message);
-		fixMessagesService.insert(entity);
-		entity.setId(fixMessagesService.findId(entity));
-		return entity;
 	}
 }

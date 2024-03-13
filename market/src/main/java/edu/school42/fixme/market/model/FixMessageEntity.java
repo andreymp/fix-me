@@ -1,5 +1,6 @@
-package edu.school42.fixme.common.model;
+package edu.school42.fixme.market.model;
 
+import edu.school42.fixme.common.model.Source;
 import lombok.Data;
 
 import javax.persistence.Column;

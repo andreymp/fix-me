@@ -1,6 +1,6 @@
 package edu.school42.fixme.market.service;
 
-import edu.school42.fixme.common.model.FixMessageEntity;
+import edu.school42.fixme.market.model.FixMessageEntity;
 import edu.school42.fixme.market.repository.FixMessagesRepository;
 import lombok.RequiredArgsConstructor;
 

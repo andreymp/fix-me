@@ -2,13 +2,12 @@ package edu.school42.fixme.market.socket;
 
 import edu.school42.fixme.common.converter.FixMessageMapper;
 import edu.school42.fixme.common.dto.FixMessageDto;
-import edu.school42.fixme.common.model.FixMessageEntity;
 import edu.school42.fixme.common.model.Source;
-import edu.school42.fixme.common.model.Status;
-import edu.school42.fixme.market.dto.InstrumentDto;
 import edu.school42.fixme.market.exception.MarketException;
 import edu.school42.fixme.market.handler.impl.BuyMessageHandler;
 import edu.school42.fixme.market.handler.impl.SellMessageHandler;
+import edu.school42.fixme.market.model.FixMessageEntity;
+import edu.school42.fixme.market.model.Status;
 import edu.school42.fixme.market.repository.FixMessagesRepository;
 import edu.school42.fixme.market.service.FixMessagesService;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +17,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,33 +45,29 @@ public class MarketSocket {
 				}
 				log.info("received :: {}", line);
 				if (!line.contains("35=C|") && !line.contains("35=V|")) {
-					updateStatus(line, Status.COMPLETED);
+					FixMessageEntity requestEntity = new FixMessageEntity();
+					requestEntity.setBody(line);
+					requestEntity.setSource(Source.BROKER);
+					requestEntity.setStatus(Status.REQUEST);
+					fixMessagesService.insert(requestEntity);
 
 					FixMessageDto dto = mapper.toDto(line);
 					String incomingMessage = switch (dto.getSide()) {
 						case BUY -> new BuyMessageHandler(mapper).handle(dto);
 						case SELL -> new SellMessageHandler(mapper).handle(dto);
 					};
-					FixMessageEntity entity = new FixMessageEntity();
-					entity.setBody(incomingMessage);
-					entity.setSource(Source.MARKET);
-					entity.setStatus(Status.CREATED);
-					fixMessagesService.insert(entity);
+					FixMessageEntity responseEntity = new FixMessageEntity();
+					responseEntity.setBody(incomingMessage);
+					responseEntity.setSource(Source.MARKET);
+					responseEntity.setStatus(Status.RESPONSE);
+					fixMessagesService.insert(responseEntity);
 
 					pw.println(incomingMessage);
 					log.info("sent :: {}", incomingMessage);
-					updateStatus(incomingMessage, Status.SENT_TO_ROUTER);
 				}
 			}
 		} catch (Exception e) {
-			log.info(e.getMessage(), e);
 			throw new MarketException(e.getMessage());
 		}
-	}
-
-	private void updateStatus(String message, Status status) {
-		FixMessageEntity entity = fixMessagesService.findByBody(message);
-		entity.setStatus(status);
-		fixMessagesService.update(entity);
 	}
 }

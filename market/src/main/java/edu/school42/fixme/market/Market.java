@@ -25,7 +25,6 @@ public class Market {
 		try {
 			new MarketSocket(MARKET_PORT).start();
 		} catch	(Exception e) {
-			log.error(e.getMessage(), e);
 			throw new MarketException(e.getMessage());
 		}
 	}

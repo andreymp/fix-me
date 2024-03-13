@@ -1,11 +1,10 @@
 package edu.school42.fixme.market.repository;
 
-import edu.school42.fixme.common.model.FixMessageEntity;
+import edu.school42.fixme.market.model.FixMessageEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.transaction.Transactional;
 
 public class FixMessagesRepository {
 
