@@ -15,10 +15,10 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <db.host>localhost</db.host>
-        <db.port>5432</db.port>
-        <db.usr>postgres</db.usr>
-        <db.pwd>postgres</db.pwd>
+        <db.host>surus.db.elephantsql.com</db.host>
+        <db.base>usprwcvs</db.base>
+        <db.usr>usprwcvs</db.usr>
+        <db.pwd>T0WeTVBUuVsM_FKj-mQbVJ2NKooV9LLU</db.pwd>
     </properties>
 
     <build>
@@ -52,7 +52,7 @@
                     <configuration>
                         <changeLogFile>db/liquibase_master.xml</changeLogFile>
                         <driver>org.postgresql.Driver</driver>
-                        <url>jdbc:postgresql://${db.host}:${db.port}/fix_me?prepareThreshold=0</url>
+                        <url>jdbc:postgresql://${db.host}/${db.base}?prepareThreshold=0</url>
                         <username>${db.usr}</username>
                         <password>${db.pwd}</password>
                     </configuration>

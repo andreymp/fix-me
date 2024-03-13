@@ -6,9 +6,9 @@
     <persistence-unit name="fixMeMarket" transaction-type="RESOURCE_LOCAL">
         <class>edu.school42.fixme.common.model.FixMessageEntity</class>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/fix_me" />
-            <property name="javax.persistence.jdbc.user" value="postgres" />
-            <property name="javax.persistence.jdbc.password" value="postgres" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://surus.db.elephantsql.com/usprwcvs" />
+            <property name="javax.persistence.jdbc.user" value="usprwcvs" />
+            <property name="javax.persistence.jdbc.password" value="T0WeTVBUuVsM_FKj-mQbVJ2NKooV9LLU" />
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
             <property name="hibernate.show_sql" value="false" />
             <property name="hibernate.format_sql" value="false" />
